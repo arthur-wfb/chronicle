@@ -1,0 +1,17 @@
+CREATE TABLE photo (
+    id TEXT NOT NULL PRIMARY KEY,
+    event_id TEXT NOT NULL REFERENCES event(id) ON DELETE CASCADE,
+    file_path TEXT NOT NULL,
+    order_index INTEGER NOT NULL
+);
+
+CREATE INDEX photo_event_id_idx ON photo(event_id);
+
+selectByEventId:
+SELECT * FROM photo
+WHERE event_id = ?
+ORDER BY order_index ASC;
+
+insert:
+INSERT INTO photo (id, event_id, file_path, order_index)
+VALUES (?, ?, ?, ?);

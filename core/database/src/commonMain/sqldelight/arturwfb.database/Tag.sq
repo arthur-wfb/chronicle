@@ -1,0 +1,14 @@
+CREATE TABLE tag (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE
+);
+
+selectByEventId:
+SELECT tag.* FROM tag
+INNER JOIN event_tag ON tag.id = event_tag.tag_id
+WHERE event_tag.event_id = ?
+ORDER BY tag.name ASC;
+
+insert:
+INSERT INTO tag (id, name)
+VALUES (?, ?);

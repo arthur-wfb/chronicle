@@ -1,0 +1,38 @@
+CREATE TABLE event (
+    id TEXT NOT NULL PRIMARY KEY,
+    title TEXT NOT NULL,
+    description TEXT,
+    start_date TEXT NOT NULL,
+    end_date TEXT,
+    place TEXT,
+    priority TEXT NOT NULL,
+    repeat_interval TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    sync_status TEXT NOT NULL
+);
+
+CREATE INDEX event_start_date_idx ON event(start_date);
+CREATE INDEX event_repeat_interval_idx ON event(repeat_interval);
+CREATE INDEX event_sync_status_idx ON event(sync_status);
+
+selectNonRepeatablePaged:
+SELECT * FROM event
+WHERE repeat_interval = 'NONE'
+AND start_date <= :anchor
+ORDER BY start_date DESC
+LIMIT :limit;
+
+selectRepeatable:
+SELECT * FROM event
+WHERE repeat_interval != 'NONE';
+
+selectById:
+SELECT * FROM event
+WHERE id = ?;
+
+insert:
+INSERT INTO event (
+    id, title, description, start_date, end_date, place,
+    priority, repeat_interval, created_at, updated_at, sync_status
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
